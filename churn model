@@ -1,0 +1,1126 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "5b0280aa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "05915eb5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df = pd.read_csv('Churn_Modelling.csv')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "bc398860",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>RowNumber</th>\n",
+       "      <th>CustomerId</th>\n",
+       "      <th>Surname</th>\n",
+       "      <th>CreditScore</th>\n",
+       "      <th>Geography</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Tenure</th>\n",
+       "      <th>Balance</th>\n",
+       "      <th>NumOfProducts</th>\n",
+       "      <th>HasCrCard</th>\n",
+       "      <th>IsActiveMember</th>\n",
+       "      <th>EstimatedSalary</th>\n",
+       "      <th>Exited</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>15634602</td>\n",
+       "      <td>Hargrave</td>\n",
+       "      <td>619</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>42</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>101348.88</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2</td>\n",
+       "      <td>15647311</td>\n",
+       "      <td>Hill</td>\n",
+       "      <td>608</td>\n",
+       "      <td>Spain</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>41</td>\n",
+       "      <td>1</td>\n",
+       "      <td>83807.86</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>112542.58</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>3</td>\n",
+       "      <td>15619304</td>\n",
+       "      <td>Onio</td>\n",
+       "      <td>502</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>42</td>\n",
+       "      <td>8</td>\n",
+       "      <td>159660.80</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>113931.57</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>4</td>\n",
+       "      <td>15701354</td>\n",
+       "      <td>Boni</td>\n",
+       "      <td>699</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>39</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>93826.63</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>5</td>\n",
+       "      <td>15737888</td>\n",
+       "      <td>Mitchell</td>\n",
+       "      <td>850</td>\n",
+       "      <td>Spain</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>43</td>\n",
+       "      <td>2</td>\n",
+       "      <td>125510.82</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>79084.10</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   RowNumber  CustomerId   Surname  CreditScore Geography  Gender  Age  \\\n",
+       "0          1    15634602  Hargrave          619    France  Female   42   \n",
+       "1          2    15647311      Hill          608     Spain  Female   41   \n",
+       "2          3    15619304      Onio          502    France  Female   42   \n",
+       "3          4    15701354      Boni          699    France  Female   39   \n",
+       "4          5    15737888  Mitchell          850     Spain  Female   43   \n",
+       "\n",
+       "   Tenure    Balance  NumOfProducts  HasCrCard  IsActiveMember  \\\n",
+       "0       2       0.00              1          1               1   \n",
+       "1       1   83807.86              1          0               1   \n",
+       "2       8  159660.80              3          1               0   \n",
+       "3       1       0.00              2          0               0   \n",
+       "4       2  125510.82              1          1               1   \n",
+       "\n",
+       "   EstimatedSalary  Exited  \n",
+       "0        101348.88       1  \n",
+       "1        112542.58       0  \n",
+       "2        113931.57       1  \n",
+       "3         93826.63       0  \n",
+       "4         79084.10       0  "
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# preview the dataset\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "d8b457e2",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 10000 entries, 0 to 9999\n",
+      "Data columns (total 14 columns):\n",
+      " #   Column           Non-Null Count  Dtype  \n",
+      "---  ------           --------------  -----  \n",
+      " 0   RowNumber        10000 non-null  int64  \n",
+      " 1   CustomerId       10000 non-null  int64  \n",
+      " 2   Surname          10000 non-null  object \n",
+      " 3   CreditScore      10000 non-null  int64  \n",
+      " 4   Geography        10000 non-null  object \n",
+      " 5   Gender           10000 non-null  object \n",
+      " 6   Age              10000 non-null  int64  \n",
+      " 7   Tenure           10000 non-null  int64  \n",
+      " 8   Balance          10000 non-null  float64\n",
+      " 9   NumOfProducts    10000 non-null  int64  \n",
+      " 10  HasCrCard        10000 non-null  int64  \n",
+      " 11  IsActiveMember   10000 non-null  int64  \n",
+      " 12  EstimatedSalary  10000 non-null  float64\n",
+      " 13  Exited           10000 non-null  int64  \n",
+      "dtypes: float64(2), int64(9), object(3)\n",
+      "memory usage: 1.1+ MB\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "786feedd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "RowNumber          0\n",
+       "CustomerId         0\n",
+       "Surname            0\n",
+       "CreditScore        0\n",
+       "Geography          0\n",
+       "Gender             0\n",
+       "Age                0\n",
+       "Tenure             0\n",
+       "Balance            0\n",
+       "NumOfProducts      0\n",
+       "HasCrCard          0\n",
+       "IsActiveMember     0\n",
+       "EstimatedSalary    0\n",
+       "Exited             0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# check missing values in variables\n",
+    "df.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "e9ed0e88",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = df.drop(['Exited'], axis=1)\n",
+    "y = df['Exited']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "59a87636",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# split data into training and testing sets\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33, random_state = 42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "9dbd6a20",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "((6700, 13), (3300, 13))"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# check the shape of X_train and X_test\n",
+    "X_train.shape, X_test.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "d532c50b",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "RowNumber            int64\n",
+       "CustomerId           int64\n",
+       "Surname             object\n",
+       "CreditScore          int64\n",
+       "Geography           object\n",
+       "Gender              object\n",
+       "Age                  int64\n",
+       "Tenure               int64\n",
+       "Balance            float64\n",
+       "NumOfProducts        int64\n",
+       "HasCrCard            int64\n",
+       "IsActiveMember       int64\n",
+       "EstimatedSalary    float64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# check data types in X_train\n",
+    "X_train.dtypes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "572b68ac",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>RowNumber</th>\n",
+       "      <th>CustomerId</th>\n",
+       "      <th>Surname</th>\n",
+       "      <th>CreditScore</th>\n",
+       "      <th>Geography</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Tenure</th>\n",
+       "      <th>Balance</th>\n",
+       "      <th>NumOfProducts</th>\n",
+       "      <th>HasCrCard</th>\n",
+       "      <th>IsActiveMember</th>\n",
+       "      <th>EstimatedSalary</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>8371</th>\n",
+       "      <td>8372</td>\n",
+       "      <td>15661034</td>\n",
+       "      <td>Ngozichukwuka</td>\n",
+       "      <td>813</td>\n",
+       "      <td>Germany</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>29</td>\n",
+       "      <td>5</td>\n",
+       "      <td>106059.40</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>187976.88</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5027</th>\n",
+       "      <td>5028</td>\n",
+       "      <td>15807989</td>\n",
+       "      <td>Wall</td>\n",
+       "      <td>681</td>\n",
+       "      <td>Germany</td>\n",
+       "      <td>Male</td>\n",
+       "      <td>37</td>\n",
+       "      <td>8</td>\n",
+       "      <td>73179.34</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>25292.53</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9234</th>\n",
+       "      <td>9235</td>\n",
+       "      <td>15766044</td>\n",
+       "      <td>Cameron</td>\n",
+       "      <td>642</td>\n",
+       "      <td>Germany</td>\n",
+       "      <td>Male</td>\n",
+       "      <td>49</td>\n",
+       "      <td>4</td>\n",
+       "      <td>120688.61</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>24770.22</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3944</th>\n",
+       "      <td>3945</td>\n",
+       "      <td>15794792</td>\n",
+       "      <td>Golubev</td>\n",
+       "      <td>612</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Female</td>\n",
+       "      <td>31</td>\n",
+       "      <td>8</td>\n",
+       "      <td>117989.76</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>54129.86</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6862</th>\n",
+       "      <td>6863</td>\n",
+       "      <td>15736287</td>\n",
+       "      <td>Piccio</td>\n",
+       "      <td>586</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Male</td>\n",
+       "      <td>33</td>\n",
+       "      <td>9</td>\n",
+       "      <td>0.00</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>6975.02</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      RowNumber  CustomerId        Surname  CreditScore Geography  Gender  \\\n",
+       "8371       8372    15661034  Ngozichukwuka          813   Germany  Female   \n",
+       "5027       5028    15807989           Wall          681   Germany    Male   \n",
+       "9234       9235    15766044        Cameron          642   Germany    Male   \n",
+       "3944       3945    15794792        Golubev          612    France  Female   \n",
+       "6862       6863    15736287         Piccio          586    France    Male   \n",
+       "\n",
+       "      Age  Tenure    Balance  NumOfProducts  HasCrCard  IsActiveMember  \\\n",
+       "8371   29       5  106059.40              1          0               0   \n",
+       "5027   37       8   73179.34              2          1               1   \n",
+       "9234   49       4  120688.61              1          1               0   \n",
+       "3944   31       8  117989.76              1          1               1   \n",
+       "6862   33       9       0.00              1          1               0   \n",
+       "\n",
+       "      EstimatedSalary  \n",
+       "8371        187976.88  \n",
+       "5027         25292.53  \n",
+       "9234         24770.22  \n",
+       "3944         54129.86  \n",
+       "6862          6975.02  "
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_train.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "0b3d2dc3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# import category encoders\n",
+    "import category_encoders as ce"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "94cbad52",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# encode categorical variables with ordinal encoding\n",
+    "encoder = ce.OrdinalEncoder(cols=['RowNumber', 'CustomerId', 'Surname', 'CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary',])\n",
+    "X_train = encoder.fit_transform(X_train)\n",
+    "X_test = encoder.transform(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "6e3117d0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>RowNumber</th>\n",
+       "      <th>CustomerId</th>\n",
+       "      <th>Surname</th>\n",
+       "      <th>CreditScore</th>\n",
+       "      <th>Geography</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Tenure</th>\n",
+       "      <th>Balance</th>\n",
+       "      <th>NumOfProducts</th>\n",
+       "      <th>HasCrCard</th>\n",
+       "      <th>IsActiveMember</th>\n",
+       "      <th>EstimatedSalary</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>8371</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5027</th>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9234</th>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3944</th>\n",
+       "      <td>4</td>\n",
+       "      <td>4</td>\n",
+       "      <td>4</td>\n",
+       "      <td>4</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>4</td>\n",
+       "      <td>2</td>\n",
+       "      <td>4</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>4</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6862</th>\n",
+       "      <td>5</td>\n",
+       "      <td>5</td>\n",
+       "      <td>5</td>\n",
+       "      <td>5</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>5</td>\n",
+       "      <td>4</td>\n",
+       "      <td>5</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>5</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      RowNumber  CustomerId  Surname  CreditScore  Geography  Gender  Age  \\\n",
+       "8371          1           1        1            1          1       1    1   \n",
+       "5027          2           2        2            2          1       2    2   \n",
+       "9234          3           3        3            3          1       2    3   \n",
+       "3944          4           4        4            4          2       1    4   \n",
+       "6862          5           5        5            5          2       2    5   \n",
+       "\n",
+       "      Tenure  Balance  NumOfProducts  HasCrCard  IsActiveMember  \\\n",
+       "8371       1        1              1          1               1   \n",
+       "5027       2        2              2          2               2   \n",
+       "9234       3        3              1          2               1   \n",
+       "3944       2        4              1          2               2   \n",
+       "6862       4        5              1          2               1   \n",
+       "\n",
+       "      EstimatedSalary  \n",
+       "8371                1  \n",
+       "5027                2  \n",
+       "9234                3  \n",
+       "3944                4  \n",
+       "6862                5  "
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_train.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "f4eae573",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>RowNumber</th>\n",
+       "      <th>CustomerId</th>\n",
+       "      <th>Surname</th>\n",
+       "      <th>CreditScore</th>\n",
+       "      <th>Geography</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Tenure</th>\n",
+       "      <th>Balance</th>\n",
+       "      <th>NumOfProducts</th>\n",
+       "      <th>HasCrCard</th>\n",
+       "      <th>IsActiveMember</th>\n",
+       "      <th>EstimatedSalary</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>6252</th>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>136.0</td>\n",
+       "      <td>382.0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>39.0</td>\n",
+       "      <td>11</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>-1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4684</th>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>366.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>15.0</td>\n",
+       "      <td>10</td>\n",
+       "      <td>5.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>-1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1731</th>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>927.0</td>\n",
+       "      <td>85.0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1</td>\n",
+       "      <td>29.0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>5.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>-1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4742</th>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>609.0</td>\n",
+       "      <td>395.0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>26.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>-1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4521</th>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>567.0</td>\n",
+       "      <td>238.0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1</td>\n",
+       "      <td>9.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>-1.0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>-1.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      RowNumber  CustomerId  Surname  CreditScore  Geography  Gender   Age  \\\n",
+       "6252       -1.0        -1.0    136.0        382.0          1       2  39.0   \n",
+       "4684       -1.0        -1.0     -1.0        366.0          2       2  15.0   \n",
+       "1731       -1.0        -1.0    927.0         85.0          3       1  29.0   \n",
+       "4742       -1.0        -1.0    609.0        395.0          1       2  26.0   \n",
+       "4521       -1.0        -1.0    567.0        238.0          3       1   9.0   \n",
+       "\n",
+       "      Tenure  Balance  NumOfProducts  HasCrCard  IsActiveMember  \\\n",
+       "6252      11     -1.0              2          1               1   \n",
+       "4684      10      5.0              2          2               2   \n",
+       "1731       3      5.0              2          2               1   \n",
+       "4742       2     -1.0              2          2               2   \n",
+       "4521       6     -1.0              1          2               2   \n",
+       "\n",
+       "      EstimatedSalary  \n",
+       "6252             -1.0  \n",
+       "4684             -1.0  \n",
+       "1731             -1.0  \n",
+       "4742             -1.0  \n",
+       "4521             -1.0  "
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "X_test.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "837a2426",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Model accuracy score with 10 decision-trees : 0.7027\n"
+     ]
+    }
+   ],
+   "source": [
+    "# import Random Forest classifier\n",
+    "from sklearn.ensemble import RandomForestClassifier\n",
+    "# instantiate the classifier \n",
+    "rfc = RandomForestClassifier(random_state=0)\n",
+    "# fit the model\n",
+    "rfc.fit(X_train, y_train)\n",
+    "# Predict the Test set results\n",
+    "y_pred = rfc.predict(X_test)\n",
+    "# Check accuracy score \n",
+    "from sklearn.metrics import accuracy_score\n",
+    "print('Model accuracy score with 10 decision-trees : {0:0.4f}'. format(accuracy_score(y_test, y_pred)))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "1e18d21b",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Model accuracy score with 100 decision-trees : 0.7027\n"
+     ]
+    }
+   ],
+   "source": [
+    "# instantiate the classifier with n_estimators = 100\n",
+    "rfc_100 = RandomForestClassifier(n_estimators=100, random_state=0)\n",
+    "# fit the model to the training set\n",
+    "rfc_100.fit(X_train, y_train)\n",
+    "# Predict on the test set results\n",
+    "y_pred_100 = rfc_100.predict(X_test)\n",
+    "# Check accuracy score \n",
+    "print('Model accuracy score with 100 decision-trees : {0:0.4f}'. format(accuracy_score(y_test, y_pred_100)))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "56c044cf",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "RandomForestClassifier(random_state=0)"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# create the classifier with n_estimators = 100\n",
+    "clf = RandomForestClassifier(n_estimators=100, random_state=0)\n",
+    "# fit the model to the training set\n",
+    "clf.fit(X_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "9aae4ec5",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "NumOfProducts      0.133624\n",
+       "Age                0.125412\n",
+       "CreditScore        0.106832\n",
+       "Surname            0.106176\n",
+       "EstimatedSalary    0.092710\n",
+       "CustomerId         0.092282\n",
+       "RowNumber          0.091634\n",
+       "Balance            0.085446\n",
+       "Tenure             0.063019\n",
+       "Geography          0.039345\n",
+       "IsActiveMember     0.029914\n",
+       "HasCrCard          0.016826\n",
+       "Gender             0.016780\n",
+       "dtype: float64"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# view the feature scores\n",
+    "feature_scores = pd.Series(clf.feature_importances_, index=X_train.columns).sort_values(ascending=False)\n",
+    "feature_scores"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "dd1c93ba",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Creating a seaborn bar plot\n",
+    "sns.barplot(x=feature_scores, y=feature_scores.index)\n",
+    "# Add labels to the graph\n",
+    "plt.xlabel('Feature Importance Score')\n",
+    "plt.ylabel('Features')\n",
+    "# Add title to the graph\n",
+    "plt.title(\"Visualizing Important Features\")\n",
+    "# Visualize the graph\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "e5b4c803",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# declare feature vector and target variable\n",
+    "X = df.drop(['Exited', 'Gender'], axis=1)\n",
+    "y = df['Exited']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "86b60743",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# split data into training and testing sets\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33, random_state = 42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "e4abf011",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# encode categorical variables with ordinal encoding\n",
+    "encoder = ce.OrdinalEncoder(cols=['RowNumber', 'CustomerId', 'Surname', 'CreditScore', 'Geography', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary'])\n",
+    "X_train = encoder.fit_transform(X_train)\n",
+    "X_test = encoder.transform(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "a923957c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Model accuracy score with Gender variable removed : 0.5597\n"
+     ]
+    }
+   ],
+   "source": [
+    "# instantiate the classifier with n_estimators = 100\n",
+    "clf = RandomForestClassifier(random_state=0)\n",
+    "# fit the model to the training set\n",
+    "clf.fit(X_train, y_train)\n",
+    "# Predict on the test set results\n",
+    "y_pred = clf.predict(X_test)\n",
+    "# Check accuracy score \n",
+    "print('Model accuracy score with Gender variable removed : {0:0.4f}'. format(accuracy_score(y_test, y_pred)))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "2848ffc1",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Confusion matrix\n",
+      "\n",
+      " [[1402 1255]\n",
+      " [ 198  445]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Print the Confusion Matrix and slice it into four pieces\n",
+    "from sklearn.metrics import confusion_matrix\n",
+    "cm = confusion_matrix(y_test, y_pred)\n",
+    "print('Confusion matrix\\n\\n', cm)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "34c5ab92",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "              precision    recall  f1-score   support\n",
+      "\n",
+      "           0       0.88      0.53      0.66      2657\n",
+      "           1       0.26      0.69      0.38       643\n",
+      "\n",
+      "    accuracy                           0.56      3300\n",
+      "   macro avg       0.57      0.61      0.52      3300\n",
+      "weighted avg       0.76      0.56      0.60      3300\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "from sklearn.metrics import classification_report\n",
+    "print(classification_report(y_test, y_pred))"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.12"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
